@@ -1,0 +1,65 @@
+%
+% file : Rapport_Aubin_Chapal.tex
+% date : lun. nov. 12 17:36:23 CET 2018
+% author : vchapal
+% description :
+%
+\documentclass{article}
+\usepackage{amsmath, amssymb}
+
+\begin{document}
+
+\title{Rapport Devoir Maison - Jeu Light Up}
+\author{Claire AUBIN et Victor CHAPAL}
+\maketitle
+
+\section{Jeu sans les murs}
+Dans cette section nous ne traiterons que les contraintes 1, 2 et 4. En effet les autres ne nous concernent pas pour le moment.
+
+\begin{itemize}
+\item Contrainte 1 : $ \wedge_{i,j \in [1,N]} ~ islit_{i,j}  $
+\item Contrainte 2 : $ islit_{i,j} ~ \Leftrightarrow ~ bulb_{i,j} ~ \vee ~ (\vee_{i \in [1,N]} ~ bulb_{i,j}) ~ \vee ~ (\vee_{j \in [1,N]} ~ bulb_{i,j}) $
+\item Contrainte 4 : $ bulb_{i,j} ~ \Rightarrow ~ (\wedge_{i \in [1,N]} ~ \neg bulb_{i,j}) ~ \wedge ~ (\wedge_{j \in [1,N]} ~ \neg bulb_{i,j})  $
+\end{itemize}
+
+\section{Ajout des murs sans cardinalit\'e}
+
+Tout d'abord nous commençons par définir les deux formules suivnates :
+\begin{itemize}
+\item $ nowall_{(i,j)(k,l)} ~ \Leftrightarrow ~ \wedge_{m,n \in [i,k]\times[j,l]} ~ \neg wall_{m,n} $
+\item $ haswall_{(i,j)(k,l)} ~ \Leftrightarrow ~ \neg nowall_{(i,j)(k,l)} $\\
+\end{itemize}
+Ce qui nous donne les contraintes suivantes :
+\begin{itemize}
+\item Contrainte 1 : $ nowall_{(i,j)(k,l)} ~ \Rightarrow ~ \wedge_{m,n \in [i,k]\times[j,l]} ~ islit_{i,j} $
+\item Contrainte 2 : Identique \`a la formule de la partie sans les murs. En effet cette contrainte ne fait pas directement ref\'erence aux murs.
+\item Contrainte 3 :
+\begin{align}
+\nonumber
+ wall_{i,j} ~ \Rightarrow &~ [(\vee_{m<i}bulb_{m,j} ~ \Rightarrow ~ \wedge_{m>i} ~ \neg islit_{m,j})~\wedge ~ (\wedge_{m>i} ~ bulb_{m,j} ~ \Rightarrow ~ \wedge_{m<i} ~ \neg islit_{m,j})\\
+\nonumber
+& \wedge ~ (\wedge_{n<j} ~ bulb_{i,n} ~ \Rightarrow ~ \wedge_{n>j} ~ \neg islit_{i,n})~ \wedge ~ (\wedge_{n>j} ~ bulb_{i,n} ~ \Rightarrow ~ \wedge_{n<j} ~ \neg islit_{i,n})]\\
+\nonumber
+\end{align}
+\item Contrainte 4 : Identique \'a la formule de la partie sans les murs. En effet cette contrainte ne fait pas directement ref\'erence aux murs.
+\item Contrainte 5 : $ wall_{i,j}~\Rightarrow~\neg bulb_{i,j} $
+\end{itemize}
+
+\section{Ajout des cardinalités}
+
+Tout d'abord nous commençons par définir les deux formules suivnates :
+\begin{itemize}
+\item $ card_{(i,j),0}~\Leftrightarrow~\neg bulb_{i,j} $
+\item $ card_{(i,j),1}~\Leftrightarrow~bulb_{i,j} $\\
+\end{itemize}
+Ce qui nous donne les contraintes suivantes :
+\begin{itemize}
+\item Contrainte 1 :
+\item Contrainte 2 :
+\item Contrainte 3 :
+\item Contrainte 4 :
+\item Contrainte 5 :
+\item Contrainte 6 :
+\end{itemize}
+
+\end{document}
