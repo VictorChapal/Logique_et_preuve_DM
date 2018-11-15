@@ -33,7 +33,7 @@ Dans cette section nous ne traiterons que les contraintes 1, 2 et 4. En effet le
 
 \section{Ajout des murs sans cardinalit\'e}
 
-Tout d'abord nous commençons par définir les deux formules suivnates :
+Tout d'abord nous commençons par d\'efinir les deux formules suivnates :
 \begin{itemize}
 \item $ nowall_{(i,j)(k,l)} ~ \Leftrightarrow ~ \wedge_{m,n \in [i,k]\times[j,l]} ~ \neg wall_{m,n} $
 \item $ haswall_{(i,j)(k,l)} ~ \Leftrightarrow ~ \neg nowall_{(i,j)(k,l)} $\\
@@ -54,26 +54,47 @@ Ce qui nous donne les contraintes suivantes :
 \end{align}
 Un mur bloque le passage de la lumière signifie que s'il y a un mur sur la case (i,j) alors si la lampe est situé au nord du mur toutes les case au sud du mur ne sont pas éclairés, et inversement. Et si il y a une lampe à droite du mur alors toutes les cases à gauche du mur ne seront pas éclairés, et inversement.
 \item Contrainte 4 : Identique \'a la formule de la partie sans les murs. En effet cette contrainte ne fait pas directement ref\'erence aux murs.
-\item Contrainte 5 : $ wall_{i,j}~\Rightarrow~\neg bulb_{i,j} $\\
-  Pour toutes les cases possédant un mur il ne peut y avoir de lampe.
+
+\item Contrainte 5 : $ wall_{i,j} ~ \Rightarrow ~ \neg bulb_{i,j} $\\
+Pour toutes les cases possédant un mur il ne peut y avoir de lampe.
 \end{itemize}
 Nous ne traitons pas les contraintes 2 et 4 dans cette partie. En effet ces contraintes ne font pas directement réf\'erences aux murs donc n'ont pas besoin d'êre modifiés. 
 
-\section{Ajout des cardinalités}
+\section{Ajout des cardinalit\'es}
 
-Tout d'abord nous commençons par définir les deux formules suivnates :
+Tout d'abord nous commen\c{c}ons par d\'efinir les formules suivantes :
 \begin{itemize}
-\item $ card_{(i,j),0}~\Leftrightarrow~\neg bulb_{i,j} $
-\item $ card_{(i,j),1}~\Leftrightarrow~bulb_{i,j} $\\
+\item $ card_{(i,j),0} ~ \Leftrightarrow ~ \neg bulb_{i,j} $
+\item $ card_{(i,j),1} ~ \Leftrightarrow ~ bulb_{i,j} $
+\item 
+\begin{align}
+\nonumber card(i,j),n,e,s,w ~ \Leftrightarrow &~card(i-1,j),n ~ \wedge ~ card(i,j+1),e
+\\ 
+\nonumber
+&~ \wedge ~ card(i+1,j),s ~ \wedge ~ card(i,j-1),w 
+\end{align}
 \end{itemize}
-Ce qui nous donne les contraintes suivantes :
-\begin{itemize}
-\item Contrainte 1 :
-\item Contrainte 2 :
-\item Contrainte 3 :
-\item Contrainte 4 :
-\item Contrainte 5 :
-\item Contrainte 6 :
-\end{itemize}
+Cela nous permet ainsi de r\'epondre à la derni\`ere contrainte :
+\begin{align}
+\nonumber
+&card0(i,j) ~ \Leftrightarrow ~ card(i-1,j),0 ~ \wedge ~ card(i,j+1),0~ \wedge ~ card(i+1,j),0 ~ \wedge ~ card(i,j-1),0\\
+\nonumber
+\\
+\nonumber
+&card1(i,j) ~ \Leftrightarrow ~ \vee_{n+e+s+w = 1} ~ [card(i-1,j),n ~ \wedge ~ card(i,j+1),e ~ \wedge ~ card(i+1,j),s ~ \wedge ~ card(i,j-1),w]\\
+\nonumber
+\\
+\nonumber
+&card2(i,j) ~ \Leftrightarrow ~ \vee_{n+e+s+w = 2} ~ [card(i-1,j),n ~ \wedge ~ card(i,j+1),e~ \wedge ~ card(i+1,j),s ~ \wedge ~ card(i,j-1),w]\\
+\nonumber
+\\
+\nonumber
+&card3(i,j) ~ \Leftrightarrow ~ \vee_{n+e+s+w = 3} ~ [card(i-1,j),n ~ \wedge ~ card(i,j+1),e~ \wedge ~ card(i+1,j),s ~ \wedge ~ card(i,j-1),w]\\
+\nonumber
+\\
+\nonumber
+&card4(i,j) ~ \Leftrightarrow ~ card(i-1,j),1 ~ \wedge ~ card(i,j+1),1 ~ \wedge ~ card(i+1,j),1 ~ \wedge ~ card(i,j-1),1\\
+\nonumber
+\end{align}
 
 \end{document}
