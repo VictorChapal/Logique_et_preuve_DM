@@ -61,6 +61,26 @@ done
  
 ########################### Partie 3 ###########################
 #def nowall
+(define-fun nowall ((I Int) (J Int) (K Int) (L Int)) Bool
+ (for m in `seq I K`; do
+      for n in `seq J L`; do
+	  (iff not wall_${m}_{n} true)
+      done
+  done
+  ))
+
+#def haswall
+(define-fun haswall ((I Int) (J Int) (K Int) (L Int)) Bool
+ (iff not nowall(I J K L) true))
+
+#contrainte n°1
+(implies (nowall(I J K L))
+ (and (for m in `seq I K`; do
+	   for n in `seq J L`; do
+	       (islit_${m}_${n})
+	   done
+       done
+  )))
 
 #contrainte n°3
 (implies (wall_${I}_${J})
