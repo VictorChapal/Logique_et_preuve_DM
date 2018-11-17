@@ -35,24 +35,34 @@ function contrainte_1_V1(){
     done
 }
 
-contrainte_1_V1
+contrainte_1_V1 # appelle la contrainte 1
 
-#contrainte n°2 //pas encore bonne
+#contrainte n°2
 function contrainte_2_V1(){
-    echo "(assert (iff (islit_${I}_${J})
-	(or (bulb_${I}_${J})
-	    (or ("
     for I in `seq 1 $((N))`; do
-	echo "(bulb_${I}_${J})))"
+	for J in `seq 1 $((N))`; do
+	    echo "(assert 
+  (iff "  	 
+	    echo "    (islit_${I}_${J})
+    (or (bulb_${I}_${J})
+        (or "
+	    for M in `seq 1 $((N))`; do
+		echo "            (bulb_${M}_${J})"
+	    done
+	    echo "         )"
+	    echo "         (or "
+	    for N in `seq 1 $((N))`; do
+		echo "            (bulb_${I}_${N})"
+	    done
+	done
     done
-    echo" (or ("
-    for J in `seq 1 $((N))`; do
-        echo "(bulb_${I}_${J})))"
-    done
-echo ")))"
+    echo "         )
+     )
+  )
+)"
 }
 
-contrainte_2_V1
+contrainte_2_V1 # appelle la contrainte 2
 
 #contraintes n° 3,5,6 ne sont pas faisable  dans cette section
 
