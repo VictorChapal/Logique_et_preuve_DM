@@ -25,7 +25,7 @@ Dans cette section nous ne traiterons que les contraintes 1, 2 et 4. En effet le
   La case (i,j) est éclairée si elle contient une lampe ou s'il y a une lampe sur la ligne i ou sur la colonne j.
   
 \item Contrainte 4 : $ bulb_{i,j} ~ \Rightarrow ~ (\wedge_{i \in [1,N]} ~ \neg bulb_{i,j}) ~ \wedge ~ (\wedge_{j \in [1,N]} ~ \neg bulb_{i,j})  $ \\
-  Pour qu'une lampe ne soit pas éclairée par une autre lampe il faut qu'il n'y ai pas de lampe sur la ligne i et sur la colonne j.
+  Si une lampe se trouve sur la case (i,j), il ne peut pas y avoir de lampe ni sur la ligne i, ni sur la colonne j.
 \end{itemize}
 
 
@@ -42,8 +42,7 @@ Ce qui nous donne les contraintes suivantes :
 \begin{itemize}
   
 \item Contrainte 1 : $ nowall_{(i,j)(k,l)} ~ \Rightarrow ~ \wedge_{m,n \in [i,k]\times[j,l]} ~ islit_{m,n} $ \\
-  Nous la redéfinissons car elle n'est plus valable avec l'ajout des murs. 
-\item Contrainte 2 : Identique \`a la formule de la partie sans les murs. En effet cette contrainte ne fait pas directement réf\'erence aux murs.
+  Ici nous redéfinissons cette contrainte car elle n'est plus valable avec l'ajout des murs. 
 \item Contrainte 3 :
 \begin{align}
 \nonumber
@@ -52,13 +51,11 @@ Ce qui nous donne les contraintes suivantes :
 & \wedge ~ (\wedge_{n<j} ~ bulb_{i,n} ~ \Rightarrow ~ \wedge_{n>j} ~ \neg islit_{i,n})~ \wedge ~ (\wedge_{n>j} ~ bulb_{i,n} ~ \Rightarrow ~ \wedge_{n<j} ~ \neg islit_{i,n})]\\
 \nonumber
 \end{align}
-Un mur bloque le passage de la lumière signifie que s'il y a un mur sur la case (i,j) alors si la lampe est situé au nord du mur toutes les case au sud du mur ne sont pas éclairés, et inversement. Et si il y a une lampe à droite du mur alors toutes les cases à gauche du mur ne seront pas éclairés, et inversement.
-\item Contrainte 4 : Identique \'a la formule de la partie sans les murs. En effet cette contrainte ne fait pas directement ref\'erence aux murs.
-
+Si un mur se trouve sur la case (i,j), alors une lampe qui serait située au nord du mur, ne pourrais pas propoger sa lumière au sur du mur et inverssement. De même si une lampe se trouve à droite du mur, elle ne peut pas propager sa lumière à gauche du mur et inverssement.
 \item Contrainte 5 : $ wall_{i,j} ~ \Rightarrow ~ \neg bulb_{i,j} $\\
-Pour toutes les cases possédant un mur il ne peut y avoir de lampe.
+S'il y a un mur sur la case (i,j), il ne peut pas y avoir de lampe.
 \end{itemize}
-Nous ne traitons pas les contraintes 2 et 4 dans cette partie. En effet ces contraintes ne font pas directement réf\'erences aux murs donc n'ont pas besoin d'êre modifiés. 
+Nous ne traitons pas les contraintes 2 et 4 dans cette partie. En effet ces contraintes ne font pas directement réf\'erences aux murs donc ces dernière n'ont pas besoin d'être modifiés. 
 
 \section{Ajout des cardinalit\'es}
 
