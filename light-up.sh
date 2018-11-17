@@ -18,33 +18,41 @@ IFS=$OLDIFS
 ### Variables propositionnelles
 for I in `seq 0 $((N+1))`; do
     for J in `seq 0 $((N+1))`; do
-        (declare-const bulb_${I}_${J} Bool)
-        (declare-const wall_${I}_${J} Bool)
-        (declare-const islit_${I}_${J} Bool)
+        echo "declare-const bulb_${I}_${J} Bool"
+        echo "declare-const wall_${I}_${J} Bool"
+        echo "declare-const islit_${I}_${J} Bool"
     done
 done
 
 ########################### Partie 2 ###########################
 
 #contrainte n°1
-(define-fun contrainte_1 () Bool
-    (for I in `seq 1 $((N))`; do
+function contrainte_1_V1(){
+    for I in `seq 1 $((N))`; do
 	for J in `seq 1 $((N))`; do
-	    (= islit_${I}_${J} true)
+	    echo "(assert islit_${I}_${J})"
 	done
-    done))
+    done
+}
 
-#contrainte n°2
-(define-fun contrainte_2 () Bool
-    (iff (islit_${I}_${J})
+contrainte_1_V1
+
+#contrainte n°2 //pas encore bonne
+function contrainte_2_V1(){
+    echo "(assert (iff (islit_${I}_${J})
 	(or (bulb_${I}_${J})
-	    (or (for I in `seq 1 $((N))`; do
-		    (bulb_${I}_${J})))
-	    done
-	    (or (for J in `seq 1 $((N))`; do
-		    (bulb_${I}_${J})))
-	    done)))
+	    (or ("
+    for I in `seq 1 $((N))`; do
+	echo "(bulb_${I}_${J})))"
+    done
+    echo" (or ("
+    for J in `seq 1 $((N))`; do
+        echo "(bulb_${I}_${J})))"
+    done
+echo ")))"
+}
 
+contrainte_2_V1
 
 #contraintes n° 3,5,6 ne sont pas faisable  dans cette section
 
