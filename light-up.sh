@@ -64,19 +64,33 @@ function contrainte_2_V1(){
 
 contrainte_2_V1 # appelle la contrainte 2
 
-#contraintes n° 3,5,6 ne sont pas faisable  dans cette section
+#contraintes n° 3,5,6 concernent les murs, nous ne les traitons pas dans cette section
 
 #contraintes n°4
-(define-fun contrainte_4 () Bool
-    (implies (bulb_${I}_${J})
-	(and (and (for I in `seq 1 $((N))`; do
-		    (not bulb_${I}_${J})
-		    done))
-	    (and (for J in `seq 1 $((N))`; do
-		    (not bulb_${I}_${J})
-		    done)))))
+function contrainte_4_V1(){
+    for I in `seq 1 $((N))`; do
+	for J in `seq 1 $((N))`; do
+	    echo "(assert
+  (implies (bulb_${I}_${J})"
+	    echo "    (and (and "
+	    for M in `seq 1 $((N))`; do
+		echo "           (not bulb_${M}_${J})"
+	    done
+	    echo "         )"
+	    echo "         (and ("
+	    for N in `seq 1 $((N))`; do
+		echo "           (not bulb_${I}_${N})"
+	    done
+	    echo "         )"
+	done
+    done
+    echo "    )
+  )
+)"
+}
 
- 
+contrainte_4_V1 # appelle la contrainte 4
+
 ########################### Partie 3 ###########################
 #def nowall
 (define-fun nowall ((I Int) (J Int) (K Int) (L Int)) Bool
