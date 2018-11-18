@@ -175,13 +175,9 @@ function haswall(){
 	B=$L
 	L=$tmp
     fi
-    for M in `seq $I $K`; do
-	for P in `seq $J $L`; do
-	    echo "                     (not"
-	    nowall $A $B $K $L
-	    echo "                     )"
-	done
-    done
+    echo "                     (not"
+    nowall $A $B $K $L
+    echo "                     )"
 }
 
 
@@ -295,7 +291,7 @@ function contrainte_4_V2(){
 		if [ $Q -ne $I ]
 		then
 		    echo "           (implies (bulb_${Q}_${J})"
-		    echo "                    ("
+		    echo "                    (or"
 		    haswall $I $J $Q $J
 		    echo "                    )"
 		    echo "           )"
