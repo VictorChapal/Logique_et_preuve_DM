@@ -34,6 +34,19 @@ for J in `seq 1 $((N))`; do
     echo "(assert wall_0_${J})"
     echo "(assert wall_$((N+1))_${J})"
 done
+
+### Comment lire le tableau de murs construit ci-dessus
+for I in `seq 1 $N`; do
+    for J in `seq 1 $N`; do
+        if [ "${WALLS[$((I*N+J))]}" = "" ]; then
+           # echo "Pas de mur en ($I,$J)"
+        else
+            #echo "Mur en ($I,$J)  avec valeur ${WALLS[$((I*N+J))]}"
+	    #mettre cardinalite
+	    echo "(assert (wall_${I}_${J}))"
+        fi
+    done
+done
     
 ########################### Partie 2 ###########################
 
@@ -241,6 +254,22 @@ function contrainte_5_V2(){
 contrainte_5_V2
 
 ########################### Partie 4 ###########################
+function card_0(){
+    I=$1
+    J=$2
+    echo "(assert (not bulb_${I}_${J}))" 
+}
+
+function card_1(){
+    I=$1
+    J=$2
+    echo "(assert bulb_${I}_${J})" 
+}
+
+function card_bool(){
+    echo ""
+}
 
 ########################### Partie 5 ###########################
- 
+echo "(check-sat)"
+echo "(get-model)"
