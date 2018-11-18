@@ -43,7 +43,7 @@ done
 for I in `seq 1 $N`; do
     for J in `seq 1 $N`; do
         if [ "${WALLS[$((I*N+J))]}" = "" ]; then
-           # echo "Pas de mur en ($I,$J)"
+            echo "Pas de mur en ($I,$J)"
         else
             #echo "Mur en ($I,$J)  avec valeur ${WALLS[$((I*N+J))]}"
 	    #mettre cardinalite
@@ -261,18 +261,54 @@ contrainte_5_V2
 function card_0(){
     I=$1
     J=$2
-    echo "(assert (not bulb_${I}_${J}))" 
+    echo "      ((not bulb_${I}_${J}))" 
 }
+
 
 function card_1(){
     I=$1
     J=$2
-    echo "(assert bulb_${I}_${J})" 
+    echo "      (bulb_${I}_${J})" 
 }
 
 function card_bool(){
-    echo ""
+    I=$1
+    J=$2
+    N=$3
+    E=$4
+    S=$5
+    W=$6
+    echo "(assert 
+  (or ("
+    card_$N $((I-1)) $J
+    card_$E $((I+1)) $((J+1))
+    card_$S $((I+1)) $((J-1))
+    card_$W $((I-1)) $((J-1))
+echo "      )
+  )
+)"
 }
+
+function contrainte_6_card_0(){
+
+}
+
+function contrainte_6_card_1(){
+
+}
+
+function contrainte_6_card_2(){
+
+}
+
+function contrainte_6_card_3(){
+
+}
+
+function contrainte_6_card_4(){
+
+}
+
 
 ########################### Partie 5 ###########################
 echo "(check-sat)"
