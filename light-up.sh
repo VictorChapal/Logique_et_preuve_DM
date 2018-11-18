@@ -261,14 +261,14 @@ contrainte_5_V2
 function card_0(){
     I=$1
     J=$2
-    echo "      ((not bulb_${I}_${J}))" 
+    echo "         (not bulb_${I}_${J})" 
 }
 
 
 function card_1(){
     I=$1
     J=$2
-    echo "      (bulb_${I}_${J})" 
+    echo "         (bulb_${I}_${J})" 
 }
 
 function card_bool(){
@@ -278,37 +278,113 @@ function card_bool(){
     E=$4
     S=$5
     W=$6
-    echo "(assert 
-  (or ("
     card_$N $((I-1)) $J
     card_$E $((I+1)) $((J+1))
     card_$S $((I+1)) $((J-1))
     card_$W $((I-1)) $((J-1))
-echo "      )
-  )
-)"
 }
 
 function contrainte_6_card_0(){
-
+    I=$1
+    j=$2
+    echo "(assert"
+    echo "  (and ("
+    card_bool $1 $2 0 0 0 0
+    echo "      )"
+    echo "  )"
+    echo ")"
 }
+
+contrainte_6_card_0 2 2
 
 function contrainte_6_card_1(){
-
+    I=$1
+    j=$2
+    echo "(assert"
+    echo "  (or(and("
+    card_bool $1 $2 1 0 0 0
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 0 1 0 0
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 0 0 1 0
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 0 0 0 1
+    echo "         )"
+    echo "      )"
+    echo "  )"
+    echo ")"
 }
+
+contrainte_6_card_1 2 2
 
 function contrainte_6_card_2(){
-
+    I=$1
+    j=$2
+    echo "(assert"
+    echo "  (or(and("
+    card_bool $1 $2 1 1 0 0
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 1 0 1 0
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 1 0 0 1
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 0 1 1 0
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 0 1 0 1
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 0 0 1 1
+    echo "         )"
+    echo "      )"
+    echo "  )"
+    echo ")"
+    
 }
+
+contrainte_6_card_2 2 2
 
 function contrainte_6_card_3(){
-
+    I=$1
+    j=$2
+    echo "(assert"
+    echo "  (or(and("
+    card_bool $1 $2 1 1 1 0
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 1 1 0 1
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 1 0 1 1
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 0 1 1 1
+    echo "         )"
+    echo "      )"
+    echo "  )"
+    echo ")"
 }
+
+contrainte_6_card_3 2 2
 
 function contrainte_6_card_4(){
-
+    I=$1
+    j=$2
+    echo "(assert"
+    echo "  (and ("
+    card_bool $1 $2 1 1 1 1
+    echo "      )"
+    echo "  )"
+    echo ")"
 }
 
+contrainte_6_card_4 2 2
 
 ########################### Partie 5 ###########################
 echo "(check-sat)"
