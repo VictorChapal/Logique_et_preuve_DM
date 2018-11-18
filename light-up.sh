@@ -24,6 +24,8 @@ for I in `seq 0 $((N+1))`; do
     done
 done
 
+### Faire une fonction pour afficher la où sont les murs sur la grille de départ et les case que l'ont connait déjà 
+
 ########################### Partie 2 ###########################
 
 #contrainte n°1
