@@ -19,12 +19,12 @@ Dans cette section nous ne traiterons que les contraintes 1, 2 et 4. En effet le
 
 \begin{itemize}
 \item Contrainte 1 : $ \wedge_{i,j \in [1,N]} ~ islit_{i,j}  $ \\
- Nous considérons qu'une case est vide si elle ne contient pas de mur. Donc pour cette partie toutes les cases sont vides.
+ Nous considérons qu'une case est vide si elle ne contient pas de mur. Donc pour cette partie toutes les cases sont vides et doivent donc être éclairées.
   
-\item Contrainte 2 : $ islit_{i,j} ~ \Leftrightarrow ~ bulb_{i,j} ~ \vee ~ (\vee_{i \in [1,N]} ~ bulb_{i,j}) ~ \vee ~ (\vee_{j \in [1,N]} ~ bulb_{i,j}) $\\
+\item Contrainte 2 : $ islit_{i,j} ~ \Leftrightarrow ~ bulb_{i,j} ~ \vee ~ (\vee_{i' \in [1,N]} ~ bulb_{i',j}) ~ \vee ~ (\vee_{j' \in [1,N]} ~ bulb_{i,j'}) $\\
   La case (i,j) est éclairée si elle contient une lampe ou s'il y a une lampe sur la ligne i ou sur la colonne j.
   
-\item Contrainte 4 : $ bulb_{i,j} ~ \Rightarrow ~ (\wedge_{i \in [1,N]} ~ \neg bulb_{i,j}) ~ \wedge ~ (\wedge_{j \in [1,N]} ~ \neg bulb_{i,j})  $ \\
+\item Contrainte 4 : $ bulb_{i,j} ~ \Rightarrow ~ (\wedge_{\underset{i'\neq i}{i' \in [1,N]}} ~ \neg bulb_{i',j}) ~ \wedge ~ (\wedge_{\underset{j'\neq j}{j' \in [1,N]}} ~ \neg bulb_{i,j'})  $ \\
   Si une lampe se trouve sur la case (i,j), il ne peut pas y avoir de lampe ni sur la ligne i, ni sur la colonne j.
 \end{itemize}
 
@@ -41,21 +41,30 @@ Tout d'abord nous commençons par d\'efinir les deux formules suivnates :
 Ce qui nous donne les contraintes suivantes :
 \begin{itemize}
   
-\item Contrainte 1 : $ nowall_{(i,j)(k,l)} ~ \Rightarrow ~ \wedge_{m,n \in [i,k]\times[j,l]} ~ islit_{m,n} $ \\
+\item Contrainte 1 : $ \neg wall_{i,j} ~ \Rightarrow ~ islit_{i,j} $ \\
   Ici nous redéfinissons cette contrainte car elle n'est plus valable avec l'ajout des murs. 
 \item Contrainte 3 :
 \begin{align}
 \nonumber
- wall_{i,j} ~ \Rightarrow &~ [(\vee_{m<i}bulb_{m,j} ~ \Rightarrow ~ \wedge_{m>i} ~ \neg islit_{m,j})~\wedge ~ (\wedge_{m>i} ~ bulb_{m,j} ~ \Rightarrow ~ \wedge_{m<i} ~ \neg islit_{m,j})\\
+ wall_{i,j} ~ \Rightarrow &~ [(\vee_{m<i}bulb_{m,j} ~ \Rightarrow ~ \wedge_{m>i} ~ \neg islit_{m,j})~\wedge ~ (\vee_{m>i} ~ bulb_{m,j} ~ \Rightarrow ~ \wedge_{m<i} ~ \neg islit_{m,j})\\
 \nonumber
-& \wedge ~ (\wedge_{n<j} ~ bulb_{i,n} ~ \Rightarrow ~ \wedge_{n>j} ~ \neg islit_{i,n})~ \wedge ~ (\wedge_{n>j} ~ bulb_{i,n} ~ \Rightarrow ~ \wedge_{n<j} ~ \neg islit_{i,n})]\\
+& \wedge ~ (\vee_{n<j} ~ bulb_{i,n} ~ \Rightarrow ~ \wedge_{n>j} ~ \neg islit_{i,n})~ \wedge ~ (\vee_{n>j} ~ bulb_{i,n} ~ \Rightarrow ~ \wedge_{n<j} ~ \neg islit_{i,n})]\\
 \nonumber
 \end{align}
-Si un mur se trouve sur la case (i,j), alors une lampe qui serait située au nord du mur, ne pourrais pas propoger sa lumière au sur du mur et inverssement. De même si une lampe se trouve à droite du mur, elle ne peut pas propager sa lumière à gauche du mur et inverssement.
+Si un mur se trouve sur la case (i,j), alors une lampe qui serait située au nord du mur, ne pourrait pas propager sa lumière au sud du mur et inversement. De même si une lampe se trouve à droite du mur, elle ne peut pas propager sa lumière à gauche du mur et inversement.
+
+\item Contrainte 4 :
+  \begin{eqnarray*}
+    \nonumber bulb_{i,j} ~ \Rightarrow ~& ((\wedge_{\underset{i'\neq i}{i' \in [1,N]}} ~ \neg bulb_{i',j}) ~ \wedge ~ (\wedge_{\underset{j'\neq j}{j' \in [1,N]}} ~ \neg bulb_{i,j'}))\nonumber \\
+    & \vee (\vee_{\underset{i'\neq i}{i' \in [1,N]}}bulb_{i',j} ~ \Rightarrow \vee_{k \in [1,N]} ~ haswall_{(i',j)(k,l)}) \nonumber \\
+    &\vee (\vee_{\underset{j'\neq j}{j' \in [1,N]}}bulb_{i,j'} ~ \Rightarrow \vee_{l \in [1,N]} ~ haswall_{(i,j')(k,l)}) \nonumber \\
+\end{eqnarray*}
+  On redéfinit la contrainte 4 car elle n'est plus valable avec l'ajout des murs. En effet, avec des murs, si une lampe se trouve sur la case (i,j), il ne peut pas y avoir de lampe ni sur la ligne i, ni sur la colonne j sauf s'il y a un mur entre les deux lampes.
+
 \item Contrainte 5 : $ wall_{i,j} ~ \Rightarrow ~ \neg bulb_{i,j} $\\
 S'il y a un mur sur la case (i,j), il ne peut pas y avoir de lampe.
 \end{itemize}
-Nous ne traitons pas les contraintes 2 et 4 dans cette partie. En effet ces contraintes ne font pas directement réf\'erences aux murs donc ces dernière n'ont pas besoin d'être modifiés. 
+Nous ne traitons pas la contrainte 2 dans cette partie. En effet cette contrainte ne fait pas directement réf\'erence aux murs donc cette dernière n'a pas besoin d'être modifié. 
 
 \section{Ajout des cardinalit\'es}
 
