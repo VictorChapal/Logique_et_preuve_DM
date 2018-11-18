@@ -18,25 +18,22 @@ IFS=$OLDIFS
 ### Variables propositionnelles
 for I in `seq 0 $((N+1))`; do
     for J in `seq 0 $((N+1))`; do
-        echo "declare-const bulb_${I}_${J} Bool"
-        echo "declare-const wall_${I}_${J} Bool"
-        echo "declare-const islit_${I}_${J} Bool"
+        echo "(declare-const bulb_${I}_${J} Bool)"
+        echo "(declare-const wall_${I}_${J} Bool)"
+        echo "(declare-const islit_${I}_${J} Bool)"
     done
 done
 
 
-### Faire une fonction pour afficher la où sont les murs sur la grille de départ et les case que l'ont connait déjà 
-
-
 #Déclaration murs contours
 for I in `seq 0 $((N+1))`; do
-    echo "(assert wall_${I}_0)"
-    echo "(assert wall_${I}_$((N+1)))"
+    echo "(assert (wall_${I}_0))"
+    echo "(assert (wall_${I}_$((N+1))))"
 done
 
 for J in `seq 1 $((N))`; do
-    echo "(assert wall_0_${J})"
-    echo "(assert wall_$((N+1))_${J})"
+    echo "(assert (wall_0_${J}))"
+    echo "(assert (wall_$((N+1))_${J}))"
 done
 
 ### Comment lire le tableau de murs construit ci-dessus
@@ -49,6 +46,9 @@ for I in `seq 1 $N`; do
             #echo "Mur en ($I,$J)  avec valeur ${WALLS[$((I*N+J))]}"
 	    #mettre cardinalite
 	    echo "(assert (wall_${I}_${J}))"
+	    if [ WALLS[$((I*N+J))] != "X" ]; then
+		contrainte_6_card_$((WALLS[$((I*N+J))])) I J
+	    fi
         fi
     done
 done
@@ -59,12 +59,12 @@ done
 function contrainte_1_V1(){
     for I in `seq 1 $((N))`; do
 	for J in `seq 1 $((N))`; do
-	    echo "(assert islit_${I}_${J})"
+	    echo "(assert (islit_${I}_${J}))"
 	done
     done
 }
 
-contrainte_1_V1 # appelle la contrainte 1
+#contrainte_1_V1 # appelle la contrainte 1
 
 #contrainte n°2
 function contrainte_2_V1(){
@@ -98,7 +98,7 @@ function contrainte_2_V1(){
     
 }
 
-contrainte_2_V1 # appelle la contrainte 2
+#contrainte_2_V1 # appelle la contrainte 2
 
 #contraintes n° 3,5,6 concernent les murs, nous ne les traitons pas dans cette section
 
@@ -131,7 +131,7 @@ function contrainte_4_V1(){
     done
 }
 
-contrainte_4_V1 # appelle la contrainte 4
+#contrainte_4_V1 # appelle la contrainte 4
 
 ########################### Partie 3 ###########################
 #def nowall, on l'appel en donnant en parametre I J K L
@@ -252,7 +252,8 @@ function contrainte_3_V2(){
 	done
     done
 }
-contrainte_3_V2
+
+#contrainte_3_V2
 
 #contrainte n°4
 function contrainte_4_V2(){
@@ -322,24 +323,137 @@ function contrainte_5_V2(){
     done
 	  
 }
-contrainte_5_V2
+
+#contrainte_5_V2
 
 ########################### Partie 4 ###########################
 function card_0(){
     I=$1
     J=$2
-    echo "(assert (not bulb_${I}_${J}))" 
+    echo "         (not bulb_${I}_${J})" 
 }
+
 
 function card_1(){
     I=$1
     J=$2
-    echo "(assert bulb_${I}_${J})" 
+    echo "         (bulb_${I}_${J})" 
 }
 
 function card_bool(){
-    echo ""
+    I=$1
+    J=$2
+    N=$3
+    E=$4
+    S=$5
+    W=$6
+    card_$N $((I-1)) $J
+    card_$E $((I+1)) $((J+1))
+    card_$S $((I+1)) $((J-1))
+    card_$W $((I-1)) $((J-1))
 }
+
+function contrainte_6_card_0(){
+    I=$1
+    j=$2
+    echo "(assert"
+    echo "  (and ("
+    card_bool $1 $2 0 0 0 0
+    echo "      )"
+    echo "  )"
+    echo ")"
+}
+
+#contrainte_6_card_0 2 2
+
+function contrainte_6_card_1(){
+    I=$1
+    j=$2
+    echo "(assert"
+    echo "  (or(and("
+    card_bool $1 $2 1 0 0 0
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 0 1 0 0
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 0 0 1 0
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 0 0 0 1
+    echo "         )"
+    echo "      )"
+    echo "  )"
+    echo ")"
+}
+
+#contrainte_6_card_1 2 2
+
+function contrainte_6_card_2(){
+    I=$1
+    j=$2
+    echo "(assert"
+    echo "  (or(and("
+    card_bool $1 $2 1 1 0 0
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 1 0 1 0
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 1 0 0 1
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 0 1 1 0
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 0 1 0 1
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 0 0 1 1
+    echo "         )"
+    echo "      )"
+    echo "  )"
+    echo ")"
+    
+}
+
+#contrainte_6_card_2 2 2
+
+function contrainte_6_card_3(){
+    I=$1
+    j=$2
+    echo "(assert"
+    echo "  (or(and("
+    card_bool $1 $2 1 1 1 0
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 1 1 0 1
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 1 0 1 1
+    echo "         )"
+    echo "     (and("
+    card_bool $1 $2 0 1 1 1
+    echo "         )"
+    echo "      )"
+    echo "  )"
+    echo ")"
+}
+
+#contrainte_6_card_3 2 2
+
+function contrainte_6_card_4(){
+    I=$1
+    j=$2
+    echo "(assert"
+    echo "  (and ("
+    card_bool $1 $2 1 1 1 1
+    echo "      )"
+    echo "  )"
+    echo ")"
+}
+
+#contrainte_6_card_4 2 2
 
 ########################### Partie 5 ###########################
 echo "(check-sat)"
