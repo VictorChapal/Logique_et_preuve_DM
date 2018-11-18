@@ -48,20 +48,17 @@ function declare_murs(){
 	for J in `seq 1 $N`; do
             if [ "${WALLS[$((I*N+J))]}" != "" ]; then
 		echo "(assert (wall_${I}_${J}))"
-		contrainte_6_card_$((WALLS[$((I*N+J))])) $I $J
             fi
 	done
     done
 }
 
 function declare_cardinalites(){
-    local I
-    local J
-    for I in `seq 1 $N`; do
-	for J in `seq 1 $N`; do
-            if [ "${WALLS[$((I*N+J))]}" != "" ] && [ WALLS[$((I*N+J))] != "X" ]; then
+    for A in `seq 1 $N`; do
+	for B in `seq 1 $N`; do
+            if [ "${WALLS[$((A*N+B))]}" != "" ] && [ WALLS[$((A*N+B))] != "X" ]; then
 		echo "je suis dans la fonction"
-		contrainte_6_card_$((WALLS[$((I*N+J))])) $I $J
+		contrainte_6_card_$((WALLS[$((A*N+B))])) $A $B
             fi
 	done
     done
@@ -79,7 +76,6 @@ function contrainte_1_V1(){
     done
 }
 
-#contrainte_1_V1 # appelle la contrainte 1
 
 #contrainte n°2
 function contrainte_2_V1(){
@@ -115,7 +111,6 @@ function contrainte_2_V1(){
     
 }
 
-#contrainte_2_V1 # appelle la contrainte 2
 
 #contraintes n° 3,5,6 concernent les murs, nous ne les traitons pas dans cette section
 
@@ -150,8 +145,6 @@ function contrainte_4_V1(){
     done
 }
 
-#contrainte_4_V1 # appelle la contrainte 4
-
 ########################### Partie 3 ###########################
 #def nowall, on l'appel en donnant en parametre I J K L
 function nowall(){
@@ -161,7 +154,7 @@ function nowall(){
     L=$4
     for M in `seq $A $K`; do
 	for P in `seq $B $L`; do
-	    echo "                       (assert not wall_${M}_${P})"
+	    echo "                        (not wall_${M}_${P})"
 	done
     done
 }
@@ -184,9 +177,9 @@ function haswall(){
     fi
     for M in `seq $I $K`; do
 	for P in `seq $J $L`; do
-	    echo "                     (assert (not"
+	    echo "                     (not"
 	    nowall $A $B $K $L
-	    echo "                     ))"
+	    echo "                     )"
 	done
     done
 }
@@ -205,7 +198,6 @@ function contrainte_1_V2(){
 	done
     done
 }
-contrainte_1_V2
 
 #contrainte n°3
 function contrainte_3_V2(){
@@ -274,7 +266,6 @@ function contrainte_3_V2(){
     done
 }
 
-#contrainte_3_V2
 
 #contrainte n°4
 function contrainte_4_V2(){
@@ -328,7 +319,7 @@ function contrainte_4_V2(){
 	done
     done
 }
-contrainte_4_V2
+
 
 #contrainte n°5
 function contrainte_5_V2(){
@@ -345,7 +336,7 @@ function contrainte_5_V2(){
 	  
 }
 
-#contrainte_5_V2
+
 
 ########################### Partie 4 ###########################
 function card_0(){
@@ -385,7 +376,6 @@ function contrainte_6_card_0(){
     echo ")"
 }
 
-#contrainte_6_card_0 2 2
 
 function contrainte_6_card_1(){
     I=$1
@@ -408,7 +398,6 @@ function contrainte_6_card_1(){
     echo ")"
 }
 
-#contrainte_6_card_1 2 2
 
 function contrainte_6_card_2(){
     I=$1
@@ -438,7 +427,6 @@ function contrainte_6_card_2(){
     
 }
 
-#contrainte_6_card_2 2 2
 
 function contrainte_6_card_3(){
     I=$1
@@ -461,7 +449,6 @@ function contrainte_6_card_3(){
     echo ")"
 }
 
-#contrainte_6_card_3 2 2
 
 function contrainte_6_card_4(){
     I=$1
@@ -474,18 +461,40 @@ function contrainte_6_card_4(){
     echo ")"
 }
 
-#contrainte_6_card_4 2 2
 
 ########################### Partie 5 ###########################
+
+function partie_2(){
+    contrainte_1_V1
+    contrainte_2_V1
+    contrainte_4_V1
+}
+
+function partie_3(){
+    contrainte_1_V2
+    contrainte_2_V1
+    contrainte_3_V2
+    contrainte_4_V2
+    contrainte_5_V2
+}
+
+function partie_4(){
+    contrainte_1_V2
+    contrainte_2_V1
+    contrainte_3_V2
+    contrainte_4_V2
+    contrainte_5_V2
+    declare_cardinalites
+}
 
 function main(){
     declare_const
     declare_murs_contour
     declare_murs
-    declare_cardinalites
+    partie_$1
 }
 
-main
+main 3 # 2, 3 ou 4
 
 echo "(check-sat)"
 echo "(get-model)"
