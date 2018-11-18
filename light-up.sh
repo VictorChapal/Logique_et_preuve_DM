@@ -15,43 +15,63 @@ done
 IFS=$OLDIFS
 
 
-### Variables propositionnelles
-for I in `seq 0 $((N+1))`; do
-    for J in `seq 0 $((N+1))`; do
-        echo "(declare-const bulb_${I}_${J} Bool)"
-        echo "(declare-const wall_${I}_${J} Bool)"
-        echo "(declare-const islit_${I}_${J} Bool)"
+function declare_const(){
+    local I
+    local J
+    for I in `seq 0 $((N+1))`; do
+	for J in `seq 0 $((N+1))`; do
+            echo "(declare-const bulb_${I}_${J} Bool)"
+            echo "(declare-const wall_${I}_${J} Bool)"
+            echo "(declare-const islit_${I}_${J} Bool)"
+	done
     done
-done
+}
 
-
-#Déclaration murs contours
-for I in `seq 0 $((N+1))`; do
-    echo "(assert (wall_${I}_0))"
-    echo "(assert (wall_${I}_$((N+1))))"
-done
-
-for J in `seq 1 $((N))`; do
-    echo "(assert (wall_0_${J}))"
-    echo "(assert (wall_$((N+1))_${J}))"
-done
-
-### Comment lire le tableau de murs construit ci-dessus
-for I in `seq 1 $N`; do
-    for J in `seq 1 $N`; do
-        if [ "${WALLS[$((I*N+J))]}" != "" ]; then
-	    echo "(assert (wall_${I}_${J}))"
-	    if [ WALLS[$((I*N+J))] != "X" ]; then
-		contrainte_6_card_$((WALLS[$((I*N+J))])) I J
-	    fi
-        fi
+function declare_murs_contour(){
+    local I
+    local J
+    for I in `seq 0 $((N+1))`; do
+	echo "(assert (wall_${I}_0))"
+	echo "(assert (wall_${I}_$((N+1))))"
     done
-done
     
+    for J in `seq 1 $((N))`; do
+	echo "(assert (wall_0_${J}))"
+	echo "(assert (wall_$((N+1))_${J}))"
+    done
+}
+
+function declare_murs(){
+    local I
+    local J
+    for I in `seq 1 $N`; do
+	for J in `seq 1 $N`; do
+            if [ "${WALLS[$((I*N+J))]}" != "" ]; then
+		echo "(assert (wall_${I}_${J}))"
+		contrainte_6_card_$((WALLS[$((I*N+J))])) $I $J
+            fi
+	done
+    done
+}
+
+function declare_cardinalites(){
+    local I
+    local J
+    for I in `seq 1 $N`; do
+	for J in `seq 1 $N`; do
+            if [ "${WALLS[$((I*N+J))]}" != "" ] && [ WALLS[$((I*N+J))] != "X" ]; then
+		echo "je suis dans la fonction"
+		contrainte_6_card_$((WALLS[$((I*N+J))])) $I $J
+            fi
+	done
+    done
+}
 ########################### Partie 2 ###########################
 
 #contrainte n°1
 function contrainte_1_V1(){
+    local I
+    local J
     for I in `seq 1 $((N))`; do
 	for J in `seq 1 $((N))`; do
 	    echo "(assert (islit_${I}_${J}))"
@@ -63,6 +83,8 @@ function contrainte_1_V1(){
 
 #contrainte n°2
 function contrainte_2_V1(){
+    local I
+    local J
     for I in `seq 1 $((N))`; do
 	for J in `seq 1 $((N))`; do
 	    echo "(assert 
@@ -99,6 +121,8 @@ function contrainte_2_V1(){
 
 #contraintes n°4
 function contrainte_4_V1(){
+    local I
+    local J
     for I in `seq 1 $((N))`; do
 	for J in `seq 1 $((N))`; do
 	    echo "(assert
@@ -173,6 +197,8 @@ echo"  )))"
 
 #contrainte n°3
 function contrainte_3_V2(){
+    local I
+    local J
     for I in `seq 1 $((N))`; do
 	for J in `seq 1 $((N))`; do
 	    echo "(assert
@@ -385,5 +411,15 @@ function contrainte_6_card_4(){
 #contrainte_6_card_4 2 2
 
 ########################### Partie 5 ###########################
+
+function main(){
+    declare_const
+    declare_murs_contour
+    declare_murs
+    declare_cardinalites
+}
+
+main
+
 echo "(check-sat)"
 echo "(get-model)"
